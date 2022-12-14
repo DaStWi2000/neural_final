@@ -1,3 +1,4 @@
+% Converts the MAT files into two cell arrays: 1 for input and 1 for labels
 function [features, labels] = convert2input(source_dir, files, num_cells)
     features = cell(num_cells,1);
     labels = cell(num_cells,1);

@@ -3,12 +3,17 @@ close; clear; clc; path(pathdef);
 %% Read in the Data
 % Directory of Downloaded Database
 raw_dir = "sleep-edf-database-expanded-1.0.0";
+
+%Installs the toolbox for EDF extraction
 addpath("sleep-edfx-toolbox-master")
 cd("sleep-edfx-toolbox-master")
 biosig_installer
 cd("..")
 sorted_edf_data = "edf_data";
+% Makes EDF files into MAT Files
 initialSetupEDFx(sorted_edf_data, raw_dir);
+
+% Extracts the 2 EEG channels and Hypnogram from the MAT files
 raw_mat = "raw_mat";
 mkdir(raw_mat);
 raw_dir_files = ls(sorted_edf_data);
@@ -43,13 +48,16 @@ for count = 1:length(raw_dir_files)
         num_cells = num_cells + length(hypnogram);
     end
 end
+
+% Saves the scaling factors and number of samples
 save(strcat(pwd,"\scaling.mat"),"min_eeg_1","min_eeg_2","max_eeg_1","max_eeg_2");
 save(strcat(pwd,"\num_cells.mat"),"num_cells");
 rmdir(sorted_edf_data,'s'); clear; path(pathdef);
 
-%% Preprocess the Data
+%% Preprocess the Data (scales it)
 raw_mat = "raw_mat";
 scaled_mat = "data";
+mkdir(scaled_mat);
 mat_files = ls(raw_mat);
 mat_files = string(mat_files(contains(string(mat_files),".mat"),:));
 mat_files = strtrim(mat_files);
